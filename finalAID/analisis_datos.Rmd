@@ -19,33 +19,32 @@ str(dataset)
 
 
 ```{r}
-#Eliminacion de los registros que tienen hora de partida=NA, retraso en la partida=NA, hora de llegada=NA y retraso en la llegada =Na.
+#Eliminacion de los registros que tienen hora de partida=NA, retraso en la partida=NA, hora de llegada=NA y retraso en la llegada =Na. Son vuelos que por alguna razón no salieron
 dataset<-dataset[!is.na(dataset$DEPARTURE_DELAY),]
-#Los que no tienen arrival_delay seteado es porque se cancelaron o se derivaron (pero sí tienen seteado un arrival_time).
+#Los que no tienen arrival_delay seteado es porque se cancelaron o se derivaron (pero sí tienen seteado un arrival_time), puedo preprocesar para trabajar con más datos.
 dataset[is.na(dataset$ARRIVAL_DELAY),]
 # No se si me interesan los datos que salieron y llegaron a horario.
 dataset[dataset$DEPARTURE_DELAY == 0 & dataset$ARRIVAL_DELAY == 0,]
 
 
-colnames(dataset)
-  
 
-
-delay$DEPARTURE_DELAY<-scale(delay$DEPARTURE_DELAY)
 # library
+
 library(ggplot2)
-positive<-delay[delay$DEPARTURE_DELAY>0,]
 
-ggplot(dataset, aes(x=DEPARTURE_DELAY)) + geom_histogram(binwidth = 1)
 
-ggplot(delay, aes(y=DEPARTURE_DELAY)) + geom_boxplot()
+length(dataset[dataset$DEPARTURE_DELAY==0,"DEPARTURE_DELAY"])
 
-boxplot(delay$DEPARTURE_DELAY)
+summary(dataset$DEPARTURE_DELAY)
 
-ggplot(delay[delay$DEPARTURE_DELAY>0,], aes(x = "", y = DEPARTURE_DELAY)) + 
-  geom_boxplot()
+ggplot(dataset, aes(x=DEPARTURE_DELAY)) + geom_histogram(binwidth = 5)
 
-summary(positive$DEPARTURE_DELAY)
+ggplot(dataset, aes(x=DEPARTURE_DELAY)) + geom_density(alpha=1)
+
+ggplot(dataset, aes(x = "", y = DEPARTURE_DELAY)) + 
+  geom_violin()
+
+
 
 
 unique(sort(delay$DEPARTURE_DELAY))
